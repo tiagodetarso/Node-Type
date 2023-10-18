@@ -15,4 +15,5 @@ router.delete('/cidades/:id',CidadesController.deleteByIdValidation,CidadesContr
 router.post('/cidades',CidadesController.createValidation,CidadesController.create)
 
 
+
 export { router }
