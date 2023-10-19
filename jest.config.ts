@@ -351,7 +351,7 @@ const config = {
     // A map from regular expressions to paths to transformers
 
     transform: {
-        '^.+\\.(ts/tsx)$': 'tx-jest'
+        '^.+\\.(ts|tsx)$': 'ts-jest'
     },
 
 
