@@ -7,10 +7,25 @@ describe('Cidades - DeleteById', () => {
     it('Deleta registro', async () => {
 
         const res1 = await testServer
-            .delete('/cidades/1')
+            .post('/cidades')
+            .send({nome: 'Astorga'})
+        
+        expect(res1.statusCode).toEqual(StatusCodes.CREATED)
 
-        expect(res1.statusCode).toEqual(StatusCodes.OK)
+        const resApagada = await testServer
+            .delete(`/cidades/${res1.body}`)
+
+        expect(resApagada.statusCode).toEqual(StatusCodes.OK)
         expect(typeof res1.body).toEqual('number')
+    })
+
+    it('TEnta deletar registro que não existe', async () => {
+
+        const res1 = await testServer
+            .delete('/cidades/99999')
+
+        expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR)
+        expect(res1.body).toHaveProperty('errors.default')
     })
 
     it('Tenta deletar registro com id do tipo string', async () => {

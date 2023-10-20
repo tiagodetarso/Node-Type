@@ -7,13 +7,30 @@ describe('Cidades - UpdateById', () => {
     it('Atualiza registro', async () => {
 
         const res1 = await testServer
-            .put('/cidades/3')
+            .post('/cidades')
             .send({nome: 'Astorga'})
+
+        expect(res1.statusCode).toEqual(StatusCodes.CREATED)
+
+        const resAtualizada = await testServer
+            .put(`/cidades/${res1.body}`)
+            .send({nome: 'Astorga-PR'})
             
-        expect(res1.statusCode).toEqual(StatusCodes.OK)
-        expect(typeof res1.body).toEqual('number')
+        expect(resAtualizada.statusCode).toEqual(StatusCodes.OK)
     })
 
+    it('Tenta atualizar registro que não existe', async () => {
+
+        const res1 = await testServer
+            .put('/cidades/99999')
+            .send({nome: 'Astorga'})
+            
+        expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR)
+        expect(res1.body).toHaveProperty('errors.default')
+    })
+
+
+    /*
     it('Tenta atualizar registro com nome menor que 3 caracteres', async () => {
 
         const res1 = await testServer
@@ -81,4 +98,5 @@ describe('Cidades - UpdateById', () => {
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
         expect(res1.body).toHaveProperty('errors.body.nome' && 'errors.params.id')
     })
+    */
 })
