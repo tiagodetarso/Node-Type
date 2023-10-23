@@ -5,5 +5,5 @@
 /build
 /coverage
 
-/.env
-/.sqlite
+.env
+*.sqlite
