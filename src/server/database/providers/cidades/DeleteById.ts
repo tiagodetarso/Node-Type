@@ -1,11 +1,11 @@
-import knex from 'knex'
 import { ETableNames } from '../../ETableName'
+import { Knex } from '../../knex'
 
 export const deleteById = async (id:number): Promise<void | Error> => {
     try {
-        const result = await knex(ETableNames.cidade)
-            .where('id', '=', id)
+        const result = await Knex(ETableNames.cidade)
             .del()
+            .where('id', '=', id)
         
         if (result > 0) return
 

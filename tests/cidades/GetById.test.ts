@@ -8,7 +8,7 @@ describe('Cidades - GetById', () => {
 
         const res1 = await testServer
             .post('/cidades')
-            .send({nome: 'Astorga'})
+            .send({nome: 'Sabáudia'})
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
 

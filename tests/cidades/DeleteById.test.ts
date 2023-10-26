@@ -15,11 +15,10 @@ describe('Cidades - DeleteById', () => {
         const resApagada = await testServer
             .delete(`/cidades/${res1.body}`)
 
-        expect(resApagada.statusCode).toEqual(StatusCodes.OK)
-        expect(typeof res1.body).toEqual('number')
+        expect(resApagada.statusCode).toEqual(StatusCodes.NO_CONTENT)
     })
 
-    it('TEnta deletar registro que não existe', async () => {
+    it('Tenta deletar registro que não existe', async () => {
 
         const res1 = await testServer
             .delete('/cidades/99999')

@@ -2,10 +2,10 @@ import { ICidade } from '../../models'
 import { ETableNames } from '../../ETableName'
 import { Knex } from '../../knex'
 
-
 export const create = async (cidade: Omit<ICidade, 'id'>): Promise<Number | Error> => {
     try {
-        const [result] = await Knex('database.sqlite').insert(cidade, ['id']).into(ETableNames.cidade)
+        const [result] = await Knex(ETableNames.cidade)
+            .insert(cidade, ['id'])
 
         if (typeof result === 'object') {
             return result.id

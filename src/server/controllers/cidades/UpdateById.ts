@@ -4,9 +4,10 @@ import { StatusCodes } from 'http-status-codes'
 
 import { validation } from '../../shared/middlewares'
 import { ICidade } from '../../database/models'
+import { CidadesProvider } from '../../database/providers/cidades'
 
 interface IParamProps {
-    id?: number
+    id?: yup.Maybe<number | undefined>
 }
 
 interface IBodyProps extends Omit<ICidade, 'id'> { }
@@ -21,12 +22,22 @@ export const updateByIdValidation = validation((getSchema) => ({
 }))
 
 export const updateById = async (req: Request<IParamProps, {}, IBodyProps>, res: Response) => {
+    if (!req.params.id) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            errors: {
+                default: 'O parâmetro "id" precisa ser informado'
+            }
+        })
+    }
 
-    if (Number(req.params.id) === 99999) return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        errors: {
-            default: 'Registro não encontrado'
-        }
-    })
+    const result = await CidadesProvider.updateById(req.params.id, req.body)
+    if (result instanceof Error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors: {
+                default: result.message
+            }
+        })
+    }
 
-    return res.status(StatusCodes.OK).send()
+    return res.status(StatusCodes.NO_CONTENT).send(result)
 }

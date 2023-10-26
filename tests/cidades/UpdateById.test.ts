@@ -8,22 +8,22 @@ describe('Cidades - UpdateById', () => {
 
         const res1 = await testServer
             .post('/cidades')
-            .send({nome: 'Astorga'})
+            .send({nome: 'Jaguapitã'})
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
 
         const resAtualizada = await testServer
             .put(`/cidades/${res1.body}`)
-            .send({nome: 'Astorga-PR'})
-            
-        expect(resAtualizada.statusCode).toEqual(StatusCodes.OK)
+            .send({nome: 'Jagua'})
+
+        expect(resAtualizada.statusCode).toEqual(StatusCodes.NO_CONTENT)
     })
 
     it('Tenta atualizar registro que não existe', async () => {
 
         const res1 = await testServer
             .put('/cidades/99999')
-            .send({nome: 'Astorga'})
+            .send({nome: 'Qualquer'})
             
         expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR)
         expect(res1.body).toHaveProperty('errors.default')
