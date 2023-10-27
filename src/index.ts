@@ -1,5 +1,5 @@
-import { server } from './Server'
-import { Knex } from './database/knex'
+import { server } from './server/Server'
+import { Knex } from './server/database/knex'
 
 const port  = process.env.PORT
 
