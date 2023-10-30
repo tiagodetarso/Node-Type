@@ -30,73 +30,67 @@ describe('Cidades - UpdateById', () => {
     })
 
 
-    /*
     it('Tenta atualizar registro com nome menor que 3 caracteres', async () => {
-
+        
         const res1 = await testServer
-            .put('/cidades/1')
+            .post('/cidades')
+            .send({nome: 'Cascavel'})
+
+        expect(res1.statusCode).toEqual(StatusCodes.CREATED)
+
+        const resAtualizada = await testServer
+            .put(`/cidades/${res1.body}`)
             .send({nome: 'As'})
-
-        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
-        expect(res1.body).toHaveProperty('errors.body.nome')
+        
+        expect(resAtualizada.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+        expect(resAtualizada.body).toHaveProperty('errors.body.nome')
     })
-
+    
     it('Tenta atualizar registro enviando nome vazio', async () => {
-
+        
         const res1 = await testServer
-            .put('/cidades/1')
-            .send({nome: ''})
+            .post('/cidades')
+            .send({nome: 'Foz do Iguaçu'})
 
-        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
-        expect(res1.body).toHaveProperty('errors.body.nome')
+        expect(res1.statusCode).toEqual(StatusCodes.CREATED)
+
+        const resAtualizada = await testServer
+            .put(`/cidades/${res1.body}`)
+            .send({nome: ''})
+        
+        expect(resAtualizada.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+        expect(resAtualizada.body).toHaveProperty('errors.body.nome')
     })
+
 
     it('Tenta atualizar registro com id = 0', async () => {
-
+        
         const res1 = await testServer
             .put('/cidades/0')
             .send({nome: 'Astorga'})
-
+        
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
         expect(res1.body).toHaveProperty('errors.params.id')
     })
-
-    it('Tenta atualizar registro com id = não inteiro', async () => {
-
+    
+    it('Tenta atualizar registro com id não inteiro', async () => {
+        
         const res1 = await testServer
             .put('/cidades/1.1')
             .send({nome: 'Astorga'})
-
+        
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
         expect(res1.body).toHaveProperty('errors.params.id')
     })
-
+    
     it('Tenta atualizar registro sem id', async () => {
-
+        
         const res1 = await testServer
             .put('/cidades')
             .send({nome: 'Astorga'})
-
-        expect(res1.statusCode).toEqual(StatusCodes.NOT_FOUND)
-    })
-
-    it('Tenta atualizar registro com nome vazio e sem id', async () => {
-
-        const res1 = await testServer
-            .put('/cidades')
-            .send({nome: ''})
-
-        expect(res1.statusCode).toEqual(StatusCodes.NOT_FOUND)
-    })
-
-    it('Tenta atualizar registro com nome e id não aceitáveis', async () => {
-
-        const res1 = await testServer
-            .put('/cidades/a')
-            .send({nome: 'As'})
-
+        
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
-        expect(res1.body).toHaveProperty('errors.body.nome' && 'errors.params.id')
+        expect(res1.body).toHaveProperty('errors.params.id')
     })
-    */
+    
 })

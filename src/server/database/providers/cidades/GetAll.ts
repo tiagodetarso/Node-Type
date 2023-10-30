@@ -21,11 +21,11 @@ export const getAll = async (page:number, limit:number, filter:string, id=0): Pr
             
             if (resultById) return [...result, resultById]
         }
-          
+        
         return result
         
     } catch (error) {
         console.log(error)
-        return new Error('Erro ao cadastrar registro:')
+        return new Error('Erro ao buscar registros')
     }
 }

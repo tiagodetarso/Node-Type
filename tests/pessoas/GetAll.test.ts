@@ -1,29 +1,35 @@
 import { StatusCodes } from 'http-status-codes'
 import { testServer } from '../jest.setup'
 
-describe('Cidades - GetAll', () => {
+describe('Pessoas - GetAll', () => {
+
 
     it('Busca todos sem especificações', async () => {
 
         const res1 = await testServer
-            .post('/cidades')
-            .send({nome: 'Iguaraçu'})
+            .post('/pessoas')
+            .send({
+                nome: 'Eriberto',
+                sobrenome: 'Tigre',
+                email: 'tigrao@erimail.com.br',
+                cidadeId:94
+            })
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
 
         const resBuscada = await testServer
-            .get('/cidades')
+            .get('/pessoas')
             .send()
 
         expect(Number(resBuscada.header['x-total-count'])).toBeGreaterThan(0)
         expect(resBuscada.statusCode).toEqual(StatusCodes.OK)
         expect(resBuscada.body.length).toBeGreaterThan(0)
     })
- 
+
     it('Tenta buscar com página indicada por uma string', async () => {
         
         const res1 = await testServer
-            .get('/cidades?page=A')
+            .get('/pessoas?page=A')
             .send()
         
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
@@ -31,9 +37,9 @@ describe('Cidades - GetAll', () => {
     })
     
     it('Tenta buscar com limite por página indicada por uma string', async () => {
-
+        
         const res1 = await testServer
-            .get('/cidades?limit=A')
+            .get('/pessoas?limit=A')
             .send()
         
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
@@ -43,7 +49,7 @@ describe('Cidades - GetAll', () => {
     it('Tenta buscar com filter com menos de 2 caracteres', async () => {
         
         const res1 = await testServer
-            .get('/cidades?filter=As')
+            .get('/pessoas?filter=As')
             .send()
         
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
