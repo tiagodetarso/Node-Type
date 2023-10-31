@@ -17,6 +17,13 @@ describe('Cidades - UpdateById', () => {
             .send({nome: 'Jagua'})
 
         expect(resAtualizada.statusCode).toEqual(StatusCodes.NO_CONTENT)
+
+        const resVerificar = await testServer
+            .get(`/cidades/${res1.body}`)
+            .send()
+        
+        expect(resVerificar.statusCode).toEqual(StatusCodes.OK)
+        expect(resVerificar.body.nome).toEqual('Jagua')
     })
 
     it('Tenta atualizar registro que não existe', async () => {
@@ -89,8 +96,7 @@ describe('Cidades - UpdateById', () => {
             .put('/cidades')
             .send({nome: 'Astorga'})
         
-        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
-        expect(res1.body).toHaveProperty('errors.params.id')
+        expect(res1.statusCode).toEqual(StatusCodes.NOT_FOUND)
     })
     
 })

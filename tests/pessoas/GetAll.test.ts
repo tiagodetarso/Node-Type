@@ -2,7 +2,14 @@ import { StatusCodes } from 'http-status-codes'
 import { testServer } from '../jest.setup'
 
 describe('Pessoas - GetAll', () => {
+    let cidade: number | undefined = undefined
+    beforeAll(async () => {
+        const resCidade = await testServer
+            .post('/cidades')
+            .send({ nome: 'Teste'})
 
+        cidade = resCidade.body
+    })
 
     it('Busca todos sem especificações', async () => {
 
@@ -12,7 +19,7 @@ describe('Pessoas - GetAll', () => {
                 nome: 'Eriberto',
                 sobrenome: 'Tigre',
                 email: 'tigrao@erimail.com.br',
-                cidadeId:94
+                cidadeId: cidade
             })
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)

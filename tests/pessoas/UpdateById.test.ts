@@ -2,7 +2,14 @@ import { StatusCodes } from 'http-status-codes'
 import { testServer } from '../jest.setup'
 
 describe('Pessoas - UpdateById', () => {
+    let cidade: number | undefined = undefined
+    beforeAll(async () => {
+        const resCidade = await testServer
+            .post('/cidades')
+            .send({ nome: 'Teste'})
 
+        cidade = resCidade.body
+    })
 
     it('Atualiza registro', async () => {
 
@@ -12,7 +19,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Abcd',
                 sobrenome: 'da Silva',
                 email: 'abcd@gmail.com',
-                cidadeId: 16
+                cidadeId: cidade
             })
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
@@ -23,10 +30,17 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Abcde',
                 sobrenome: 'dos Santos',
                 email: 'abcde@gmail.com',
-                cidadeId: 94
+                cidadeId: cidade
             })
 
         expect(resAtualizada.statusCode).toEqual(StatusCodes.NO_CONTENT)
+
+        const resVerificar = await testServer
+            .get(`/pessoas/${res1.body}`)
+            .send()
+
+        expect(resVerificar.statusCode).toEqual(StatusCodes.OK)
+        expect(resVerificar.body.email).toEqual('abcde@gmail.com')
     })
 
     it('Tenta atualizar registro que não existe', async () => {
@@ -37,7 +51,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Abcde',
                 sobrenome: 'dos Santos',
                 email: 'abcde@gmail.com',
-                cidadeId: 94
+                cidadeId: cidade
             })
             
         expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -54,7 +68,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Abcd',
                 sobrenome: 'da Silva',
                 email: 'abcd@gmail.com',
-                cidadeId: 16
+                cidadeId: cidade
             })
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
@@ -65,7 +79,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Ab',
                 sobrenome: 'dos Santos',
                 email: 'abcde@gmail.com',
-                cidadeId: 94
+                cidadeId: cidade
             })
 
         expect(resAtualizada.statusCode).toEqual(StatusCodes.BAD_REQUEST)
@@ -80,7 +94,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Alberto',
                 sobrenome: 'Fernandes',
                 email: 'a.fernandes@gmail.com',
-                cidadeId: 16
+                cidadeId: cidade
             })
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
@@ -91,7 +105,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Alberto',
                 sobrenome: 'Fe',
                 email: 'abcde@gmail.com',
-                cidadeId: 94
+                cidadeId: cidade
             })
 
         expect(resAtualizada.statusCode).toEqual(StatusCodes.BAD_REQUEST)
@@ -106,7 +120,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Roberto',
                 sobrenome: 'Miranda',
                 email: 'r.miranda@gmail.com',
-                cidadeId: 16
+                cidadeId: cidade
             })
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
@@ -117,7 +131,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Roberto',
                 sobrenome: 'Miranda',
                 email: 'roberto.miranda.gmail.com',
-                cidadeId: 94
+                cidadeId: cidade
             })
 
         expect(resAtualizada.statusCode).toEqual(StatusCodes.BAD_REQUEST)
@@ -132,7 +146,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Afonso',
                 sobrenome: 'Aleluia',
                 email: 'a.aleluia@gmail.com',
-                cidadeId: 16
+                cidadeId: cidade
             })
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
@@ -158,7 +172,7 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Roberto',
                 sobrenome: 'Fernandes',
                 email: 'a.fernandes@gmail.com',
-                cidadeId: 16
+                cidadeId: cidade
             })
 
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
@@ -173,11 +187,10 @@ describe('Pessoas - UpdateById', () => {
                 nome: 'Roberto',
                 sobrenome: 'Fernandes',
                 email: 'a.fernandes@gmail.com',
-                cidadeId: 16
+                cidadeId: cidade
             })
 
-        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
-        expect(res1.body).toHaveProperty('errors.params.id')
+        expect(res1.statusCode).toEqual(StatusCodes.NOT_FOUND)
     })
 
 })
