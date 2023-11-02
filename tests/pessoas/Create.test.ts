@@ -2,19 +2,53 @@ import { StatusCodes } from 'http-status-codes'
 import { testServer } from '../jest.setup'
 
 describe('Pessoas - Create', () => {
+
     let cidade: number | undefined = undefined
+    let accessToken = ''
+
+    beforeAll(async () => {
+        const email = 'create-pessoa@gmail.com'
+        const senha = '123abc'
+        await testServer.post('/cadastrar').send({
+            nome: 'Teste',
+            email: email,
+            senha: senha
+        })
+
+        const signInRes = await testServer.post('/entrar').send({ email, senha})
+
+        accessToken = signInRes.body.accessToken
+    })
+
     beforeAll(async () => {
         const resCidade = await testServer
             .post('/cidades')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({ nome: 'Teste'})
 
         cidade = resCidade.body
+    })
+
+    it('Tenta criar registro sem autenticação', async () => {
+
+        const res1 = await testServer
+            .post('/pessoas')
+            .send({
+                nome: 'Fulano',
+                sobrenome: 'De Tal',
+                email: 'fulano@gmail.com',
+                cidadeId: cidade
+            })
+
+        expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED)
+        expect(res1.body).toHaveProperty('errors.default')
     })
 
     it('Cria registro', async () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fulano',
                 sobrenome: 'De Tal',
@@ -30,6 +64,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fulaninho',
                 sobrenome: 'Malandro',
@@ -42,6 +77,7 @@ describe('Pessoas - Create', () => {
 
         const res2 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Cicraninho',
                 sobrenome: 'Jiraia',
@@ -57,6 +93,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 sobrenome: 'De Tal',
                 email: 'fulano02@gmail.com',
@@ -71,6 +108,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fulano',
                 email: 'fulano01@gmail.com',
@@ -85,6 +123,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fulano',
                 sobrenome: 'de Tal',
@@ -99,6 +138,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fulano',
                 sobrenome: 'de Tal',
@@ -113,6 +153,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fu',
                 sobrenome: 'De Tal',
@@ -128,6 +169,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fulano',
                 sobrenome: 'De',
@@ -143,6 +185,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fulano',
                 sobrenome: 'De Tal',
@@ -158,6 +201,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fula',
                 sobrenome: 'De Tal',
@@ -173,6 +217,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({
                 nome: 'Fula',
                 sobrenome: 'De Tal',
@@ -188,6 +233,7 @@ describe('Pessoas - Create', () => {
 
         const res1 = await testServer
             .post('/pessoas')
+            .set({Authorization: `Bearer ${accessToken}`})
             .send({})
 
         expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST)
