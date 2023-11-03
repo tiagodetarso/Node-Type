@@ -8,8 +8,7 @@ export const getAll = async (page:number, limit:number, filter:string, id=0): Pr
         
         const result = await Knex(ETableNames.cidade)
             .select('*')
-            .where('id', Number(id))
-            .orWhere('nome', 'like', `%${filter}%`)
+            .where('nome', 'like', `%${filter}%`)
             .offset((page - 1) * limit)
             .limit(limit)
         
